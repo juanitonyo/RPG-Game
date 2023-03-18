@@ -9,7 +9,10 @@ public class player {
     public int defense = 8;
     public int potion = 3;
     public boolean isAlive = true;
+    public boolean isBurned = false;
+    public int counter = 0;
 
+    //Auto-generated getters and setters. DO NOT REMOVE!
     public String getName() {
         return name;
     }
@@ -58,34 +61,54 @@ public class player {
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
     }
+    public boolean isBurned() {
+        return isBurned;
+    }
+    public void setBurned(boolean isBurned) {
+        this.isBurned = isBurned;
+    }
+    public int getCounter() {
+        return counter;
+    }
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
 
-    public void attack(player target) {
-        if(target.isAlive) {
-            System.out.println(this.getName() + " attacked " + target.getName() + "!");
+    //Public functions. Can be used by child classes(thePlayer, opponent, and theBoss)
+    public void slash(player target) {
 
-            int min = 1;
+        int min = 1;
 
-            int successHit = (int)Math.floor(Math.random() * (this.getAccuracy() - min + 1) + min);
-            int failedHit = (int)Math.floor(Math.random() * (target.getEvade() - min + 1) + min);
+        int successHit = (int)Math.floor(Math.random() * (this.getAccuracy() - min + 1) + min);
+        int failedHit = (int)Math.floor(Math.random() * (target.getEvade() - min + 1) + min);
 
-            boolean hit = successHit > failedHit;
+        boolean hit = successHit > failedHit;
 
-            if(hit) {
-                double damage = (this.getAttk() - target.getDefense()) * (1 + (Math.random() * 0.1 - 0.05));
-                target.setHp(target.getHp() - (int)damage);
+        if(hit) {
+            double damage = (this.getAttk() - target.getDefense()) * (1 + (Math.random() * 0.1 - 0.05));
+            target.setHp(target.getHp() - (int)damage);
 
-                if(target.getHp() < 0) {
-                    target.setAlive(false);
-                }
-
-                System.out.println(this.getName() + " damaged " + target.getName() + " by " + (int)damage);
+            if(target.getHp() < 0) {
+                target.setAlive(false);
             }
-            else {
-                System.out.println("Attack missed!");
-            }
+
+            System.out.println(this.getName() + " damaged " + target.getName() + " by " + (int)damage);
+        }
+        
+        else {
+            System.out.println("Attack missed!");
+        }
+    
+    }
+
+    public void usePotion() {
+        if(this.getPotion() > 0) {
+            System.out.println(this.getName() + " uses potion. Adding 5 hp.");
+            this.setHp(this.getHp() + 5);
+            this.setPotion(this.getPotion() - 1);
         }
         else {
-            System.out.println("Target is unattackable.");
+            System.out.println("No potion left.");
         }
     }
 }

@@ -42,10 +42,6 @@ public class thePlayer extends player{
                 double damage = (this.getAttk() - target.getDefense()) * (1 + (Math.random() * 0.1 - 0.05));
                 target.setHp(target.getHp() - (int)damage);
 
-                if(target.getHp() < 0) {
-                    target.setAlive(false);
-                }
-
                 System.out.println(this.getName() + " burned " + target.getName() + " by " + (int)damage);
 
                 Random rand = new Random();

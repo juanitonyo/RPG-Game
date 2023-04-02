@@ -14,13 +14,13 @@ public class mainClass{
             System.out.println(bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
 
-        System.out.println("\n+===============+\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n+===============+");
+        System.out.println("\n+===============+\n\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
     }
 
     //Choosing target. Returns a number if the chosen target is alive, repeat if not.
     public int chooseTarget (player [] bandit, int enemyAlive) {
         //Choosing target
-        System.out.println("Choose target: ");
+        System.out.println("\n+===============+\n\nChoose target: ");
         for(int x = 0; x < enemyAlive; x++) {
             System.out.println(bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
@@ -34,6 +34,11 @@ public class mainClass{
             chooseTarget(bandit, enemyAlive);
         }
 
+        if(choice > enemyAlive || choice < 0) {
+            System.out.println("Target unidentified. Choose another.");
+            chooseTarget(bandit, enemyAlive);
+        }
+        
         return choice;
     }
 

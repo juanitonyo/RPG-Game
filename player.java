@@ -88,15 +88,11 @@ public class player {
             double damage = (this.getAttk() - target.getDefense()) * (1 + (Math.random() * 0.1 - 0.05));
             target.setHp(target.getHp() - (int)damage);
 
-            if(target.getHp() < 0) {
-                target.setAlive(false);
-            }
-
-            System.out.println(this.getName() + " damaged " + target.getName() + " by " + (int)damage);
+            System.out.println("\n" + this.getName() + " damaged " + target.getName() + " by " + (int)damage);
         }
         
         else {
-            System.out.println("Attack missed!");
+            System.out.println("\nAttack missed!");
         }
     
     }

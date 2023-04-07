@@ -11,7 +11,7 @@ public class mainClass{
             System.out.println(bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
 
-        System.out.println("\n+===============+\n\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+\n");
+        System.out.println("\n+===============+\n\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
     }
 
     //Shows player move set and at the same chose them
@@ -27,12 +27,21 @@ public class mainClass{
         switch(choice) {
             case 1:
                 thisPlayer.slash(bandit[target - 1]);
+                if(bandit[target - 1].getHp() <= 0) {
+                    bandit[target - 1].setAlive(false);
+                }
                 break;
             case 2:
                 thisPlayer.deathBlow(bandit[target - 1]);
+                if(bandit[target - 1].getHp() <= 0) {
+                    bandit[target - 1].setAlive(false);
+                }
                 break;
             case 3:
                 thisPlayer.fireBall(bandit[target - 1]);
+                if(bandit[target - 1].getHp() <= 0) {
+                    bandit[target - 1].setAlive(false);
+                }
                 break;
             case 4:
                 thisPlayer.usePotion();
@@ -42,12 +51,6 @@ public class mainClass{
                 objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
                 break;
         }
-
-        if(bandit[target - 1].getHp() <= 0) {
-            bandit[target - 1].setAlive(false);
-        }
-
-        myChoice.close();
     }
 
     //Choosing target. Returns a number if the chosen target is alive, repeat if not.
@@ -75,7 +78,6 @@ public class mainClass{
             objSelect.chooseTarget(bandit, enemyAlive);
         }
         
-        myChoice.close();
         return choice;
         
     }
@@ -90,14 +92,14 @@ public class mainClass{
     }
 
     //Checking the status of the character
-    public void checkStatus(thePlayer thisCharacter, player [] bandit, int enemyAlive) {
+    public void checkStatus(thePlayer thisPlayer, player [] bandit, int enemyAlive) {
        
-        if(thisCharacter.isBurned()) {
-            thisCharacter.setHp(thisCharacter.getHp() - 1);
-            thisCharacter.setCounter(thisCharacter.getCounter() - 1);
+        if(thisPlayer.isBurned()) {
+            thisPlayer.setHp(thisPlayer.getHp() - 1);
+            thisPlayer.setCounter(thisPlayer.getCounter() - 1);
 
-            if(thisCharacter.getCounter() == 0) {
-                thisCharacter.setBurned(false);
+            if(thisPlayer.getCounter() == 0) {
+                thisPlayer.setBurned(false);
             }
         }
 
@@ -127,7 +129,6 @@ public class mainClass{
 
         thisPlayer.setName(myName);
         int stage = 1;
-        scanName.close();
 
         //Run this while player is still alve
         do {
@@ -145,7 +146,6 @@ public class mainClass{
                 System.out.println("\n+== Level " + level + " Stage  " + stage + " ==+\n");
 
                 while(isNotComplete && thisPlayer.isAlive) {
-                    
                     
                     objSelect.playerOpponentStatus(thisPlayer, bandit, enemyAlive);
                     
@@ -206,9 +206,6 @@ public class mainClass{
                     System.out.println("Invalid input");
                     break;
             }
-
-            myChoice.close();
-
         }
 
         System.exit(0);

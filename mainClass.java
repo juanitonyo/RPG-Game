@@ -8,7 +8,7 @@ public class mainClass{
 
         //Display enemy/s health points
         for(int x = 0; x < enemyAlive; x++) {
-            System.out.println(bandit[x].getName() + "'s HP: " + bandit[x].getHp());
+            System.out.println((x + 1) + ". " +  bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
 
         System.out.println("\n+===============+\n\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
@@ -27,21 +27,12 @@ public class mainClass{
         switch(choice) {
             case 1:
                 thisPlayer.slash(bandit[target - 1]);
-                if(bandit[target - 1].getHp() <= 0) {
-                    bandit[target - 1].setAlive(false);
-                }
                 break;
             case 2:
                 thisPlayer.deathBlow(bandit[target - 1]);
-                if(bandit[target - 1].getHp() <= 0) {
-                    bandit[target - 1].setAlive(false);
-                }
                 break;
             case 3:
                 thisPlayer.fireBall(bandit[target - 1]);
-                if(bandit[target - 1].getHp() <= 0) {
-                    bandit[target - 1].setAlive(false);
-                }
                 break;
             case 4:
                 thisPlayer.usePotion();
@@ -50,6 +41,10 @@ public class mainClass{
                 System.out.println("Invalid choice. Try Again.");
                 objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
                 break;
+        }
+
+        if(bandit[target - 1].getHp() <= 0) {
+            bandit[target - 1].setAlive(false);
         }
     }
 
@@ -60,7 +55,7 @@ public class mainClass{
         //Choosing target
         System.out.println("\n+===============+\n\nChoose target: \n");
         for(int x = 0; x < enemyAlive; x++) {
-            System.out.println((x + 1) + " " + bandit[x].getName() + "'s HP: " + bandit[x].getHp());
+            System.out.println((x + 1) + ". " + bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
         
         //Input Target
@@ -68,13 +63,13 @@ public class mainClass{
         Scanner myChoice = new Scanner(System.in);
         int choice = myChoice.nextInt();
 
-        if(bandit[choice - 1].isAlive == false) {
-            System.out.println("Target is dead. Choose another.");
-            objSelect.chooseTarget(bandit, enemyAlive);
-        }
-
         if(choice > enemyAlive || choice < 0) {
             System.out.println("Target unidentified. Choose another.");
+            objSelect.chooseTarget(bandit, enemyAlive);
+        }
+        
+        if(bandit[choice - 1].isAlive() == false) {
+            System.out.println("Target is dead. Choose another.");
             objSelect.chooseTarget(bandit, enemyAlive);
         }
         

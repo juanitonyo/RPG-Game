@@ -15,14 +15,14 @@ public class mainClass{
     }
 
     //Shows player move set and at the same chose them
-    public void playerMoveSet (thePlayer thisPlayer, player [] bandit, int enemyAlive) {
+    public void playerMoveSet (thePlayer thisPlayer, player [] bandit, int enemyAlive, Scanner s) {
         mainClass objSelect = new mainClass();
 
         System.out.print("\nPick move: \n 1. Slash\n 2. Death Blow\n 3. FireBall\n 4. Use HP Potion\n\nMove: ");
-        Scanner myChoice = new Scanner(System.in);
-        int choice = myChoice.nextInt();
+        int choice = s.nextInt();
+        s.nextLine();
 
-        int target = objSelect.chooseTarget(bandit, enemyAlive);
+        int target = objSelect.chooseTarget(bandit, enemyAlive, s);
 
         switch(choice) {
             case 1:
@@ -39,18 +39,21 @@ public class mainClass{
                 break;
             default:
                 System.out.println("Invalid choice. Try Again.");
-                objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
+                objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive, s);
                 break;
         }
 
         if(bandit[target - 1].getHp() <= 0) {
             bandit[target - 1].setAlive(false);
         }
+
     }
 
     //Choosing target. Returns a number if the chosen target is alive, repeat if not.
-    public int chooseTarget (player [] bandit, int enemyAlive) {
+    public int chooseTarget (player [] bandit, int enemyAlive, Scanner s) {
         mainClass objSelect = new mainClass();
+        boolean isValid = false;
+        int choice = 0;
 
         //Choosing target
         System.out.println("\n+===============+\n\nChoose target: \n");
@@ -58,19 +61,25 @@ public class mainClass{
             System.out.println((x + 1) + ". " + bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
         
-        //Input Target
-        System.out.print("\nTarget: ");
-        Scanner myChoice = new Scanner(System.in);
-        int choice = myChoice.nextInt();
+        while(isValid == false) {
+            //Input Target
+            System.out.print("\nTarget: ");
+            choice = s.nextInt();
+            s.nextLine();        
 
-        if(choice > enemyAlive || choice < 0) {
-            System.out.println("Target unidentified. Choose another.");
-            objSelect.chooseTarget(bandit, enemyAlive);
-        }
-        
-        if(bandit[choice - 1].isAlive() == false) {
-            System.out.println("Target is dead. Choose another.");
-            objSelect.chooseTarget(bandit, enemyAlive);
+            if(choice > enemyAlive || choice < 0) {
+                System.out.println("Target unidentified. Choose another.");
+                objSelect.chooseTarget(bandit, enemyAlive, s);
+            }
+            
+            else if(bandit[choice - 1].isAlive() == false) {
+                System.out.println("Target is dead. Choose another.");
+                objSelect.chooseTarget(bandit, enemyAlive, s);
+            }
+
+            else {
+                isValid = true;
+            }
         }
         
         return choice;
@@ -110,7 +119,7 @@ public class mainClass{
         }
     }
 
-    public void gamePlay() {
+    public void gamePlay(Scanner s) {
         // call self object to access other functions
         thePlayer thisPlayer = new thePlayer();
         mainClass objSelect = new mainClass();
@@ -119,8 +128,7 @@ public class mainClass{
 
         //Input player's name
         System.out.print("Enter player's name: ");
-        Scanner scanName = new Scanner(System.in);
-        String myName =  scanName.nextLine();
+        String myName =  s.nextLine();
 
         thisPlayer.setName(myName);
         int stage = 1;
@@ -144,7 +152,7 @@ public class mainClass{
                     
                     objSelect.playerOpponentStatus(thisPlayer, bandit, enemyAlive);
                     
-                    objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
+                    objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive, s);
 
                     objSelect.opponentsAttack(thisPlayer, bandit, enemyAlive);
 
@@ -176,23 +184,26 @@ public class mainClass{
             stage++;
 
         }while(thisPlayer.isAlive);
+
     }
     
     public static void main(String[] args) {
         
         boolean isPlayable = true;
         mainClass objSelect = new mainClass();
+        Scanner s = new Scanner(System.in);
 
         while(isPlayable){
 
             System.out.print("+== MAIN MENU ==+\n 1. Play\n 2. Exit\n+===============+\n\nSelect Option: ");
-            Scanner myChoice = new Scanner(System.in);
-            int choice = myChoice.nextInt();
+            
+            int choice = s.nextInt();
+            s.nextLine();
 
             switch(choice){
                 case 1: 
                     System.out.println("\n+===============+\n");
-                    objSelect.gamePlay();
+                    objSelect.gamePlay(s);
                     break;
                 case 2:
                     isPlayable = false;
@@ -201,8 +212,11 @@ public class mainClass{
                     System.out.println("Invalid input");
                     break;
             }
-        }
 
+            
+        }
+        
+        s.close();
         System.exit(0);
     }
 

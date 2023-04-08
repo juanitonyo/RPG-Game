@@ -89,7 +89,7 @@ public class mainClass{
     //Opponent attacks the player and the move will be used is random as long as the opponent is still alive. The opponent will attack accordingly to their names.
     public void opponentsAttack (thePlayer thisPlayer, player [] bandit, int enemyAlive) {
         for(int x = 0; x < enemyAlive; x++) {
-            if(bandit[x].isAlive) {
+            if(bandit[x].isAlive()) {
                 bandit[x].slash(thisPlayer);
             }
         }
@@ -108,7 +108,7 @@ public class mainClass{
         }
 
         for(int x = 0; x < enemyAlive; x++) {
-            if(bandit[x].isBurned) {
+            if(bandit[x].isBurned()) {
                 bandit[x].setHp(bandit[x].getHp() - 1);
                 bandit[x].setCounter(bandit[x].getCounter() - 1);
 
@@ -148,7 +148,7 @@ public class mainClass{
 
                 System.out.println("\n+== Level " + level + " Stage  " + stage + " ==+\n");
 
-                while(isNotComplete && thisPlayer.isAlive) {
+                while(isNotComplete && thisPlayer.isAlive()) {
                     
                     objSelect.playerOpponentStatus(thisPlayer, bandit, enemyAlive);
                     
@@ -167,10 +167,10 @@ public class mainClass{
 
                     //Check all opponents if alive
                     for(int x = 0; x < level; x++) {
-                        if(bandit[x].isAlive) {
+                        if(bandit[x].isAlive()) {
                             break;
                         }
-                        if(x + 1 == 5) {
+                        if(x + 1 == level) {
                             isNotComplete = false;
                         }
                     }
@@ -183,7 +183,7 @@ public class mainClass{
 
             stage++;
 
-        }while(thisPlayer.isAlive);
+        }while(thisPlayer.isAlive());
 
     }
     

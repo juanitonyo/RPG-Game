@@ -1,9 +1,15 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class mainClass{
+    public static Scanner s = new Scanner(System.in);
+    public static mainClass objSelect;
+    public player[] bandit;
+    public thePlayer thisPlayer;
+    public theBoss thisBoss; 
 
     //Show Player and Opponent Status
-    public void playerOpponentStatus (thePlayer thisPlayer, player [] bandit, int enemyAlive) {
+    public void playerOpponentStatus (thePlayer thisPlayer, player[] bandit, int enemyAlive) {
         System.out.println("\n+===============+\n");
 
         //Display enemy/s health points
@@ -15,14 +21,14 @@ public class mainClass{
     }
 
     //Shows player move set and at the same chose them
-    public void playerMoveSet (thePlayer thisPlayer, player [] bandit, int enemyAlive, Scanner s) {
+    public void playerMoveSet (thePlayer thisPlayer, player[] bandit, int enemyAlive) {
         mainClass objSelect = new mainClass();
 
         System.out.print("\nPick move: \n 1. Slash\n 2. Death Blow\n 3. FireBall\n 4. Use HP Potion\n\nMove: ");
         int choice = s.nextInt();
         s.nextLine();
 
-        int target = objSelect.chooseTarget(bandit, enemyAlive, s);
+        int target = objSelect.chooseTarget(bandit, enemyAlive);
 
         switch(choice) {
             case 1:
@@ -39,7 +45,7 @@ public class mainClass{
                 break;
             default:
                 System.out.println("Invalid choice. Try Again.");
-                objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive, s);
+                objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
                 break;
         }
 
@@ -50,9 +56,8 @@ public class mainClass{
     }
 
     //Choosing target. Returns a number if the chosen target is alive, repeat if not.
-    public int chooseTarget (player [] bandit, int enemyAlive, Scanner s) {
-        mainClass objSelect = new mainClass();
-        boolean isValid = false;
+    public int chooseTarget (player[] bandit, int enemyAlive) {
+        boolean isValid = true;
         int choice = 0;
 
         //Choosing target
@@ -69,12 +74,12 @@ public class mainClass{
 
             if(choice > enemyAlive || choice < 0) {
                 System.out.println("Target unidentified. Choose another.");
-                objSelect.chooseTarget(bandit, enemyAlive, s);
+                objSelect.chooseTarget(bandit, enemyAlive);
             }
             
             else if(bandit[choice - 1].isAlive() == false) {
                 System.out.println("Target is dead. Choose another.");
-                objSelect.chooseTarget(bandit, enemyAlive, s);
+                objSelect.chooseTarget(bandit, enemyAlive);
             }
 
             else {
@@ -119,12 +124,10 @@ public class mainClass{
         }
     }
 
-    public void gamePlay(Scanner s) {
+    public void gamePlay() {
         // call self object to access other functions
-        thePlayer thisPlayer = new thePlayer();
-        mainClass objSelect = new mainClass();
-
-        player [] bandit = new player[5];
+        thisPlayer = new thePlayer();
+        bandit = new player[5];
 
         //Input player's name
         System.out.print("Enter player's name: ");
@@ -136,7 +139,7 @@ public class mainClass{
         //Run this while player is still alve
         do {
             
-            for(int level = 1; level <= 5; level++) {
+            for(int level = 1; level <= 5 && thisPlayer.isAlive(); level++) {
                 boolean isNotComplete = true;
                 int enemyAlive = level;
 
@@ -152,7 +155,7 @@ public class mainClass{
                     
                     objSelect.playerOpponentStatus(thisPlayer, bandit, enemyAlive);
                     
-                    objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive, s);
+                    objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
 
                     objSelect.opponentsAttack(thisPlayer, bandit, enemyAlive);
 
@@ -171,12 +174,13 @@ public class mainClass{
                             break;
                         }
                         if(x + 1 == level) {
-                            isNotComplete = false;
+                            isNotComplete = !isNotComplete;
                         }
                     }
 
-                    if(isNotComplete == false) {
+                    if(!isNotComplete) {
                         System.out.println("\n+== CONGRATULATIONS! YOU CLEARED LEVEL " + level + " STAGE " + stage + "! ==+\n");
+                        Arrays.fill(bandit, null);
                     }
                 }
             }
@@ -190,8 +194,6 @@ public class mainClass{
     public static void main(String[] args) {
         
         boolean isPlayable = true;
-        mainClass objSelect = new mainClass();
-        Scanner s = new Scanner(System.in);
 
         while(isPlayable){
 
@@ -203,7 +205,7 @@ public class mainClass{
             switch(choice){
                 case 1: 
                     System.out.println("\n+===============+\n");
-                    objSelect.gamePlay(s);
+                    objSelect.gamePlay();
                     break;
                 case 2:
                     isPlayable = false;

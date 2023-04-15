@@ -2,14 +2,19 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class mainClass{
+
+    // Global objects
     public static Scanner s = new Scanner(System.in);
-    public static mainClass objSelect;
+    public static mainClass objSelect = new mainClass();
     public player[] bandit;
     public thePlayer thisPlayer;
     public theBoss thisBoss; 
 
+    //Global Variable
+
+
     //Show Player and Opponent Status
-    public void playerOpponentStatus (thePlayer thisPlayer, player[] bandit, int enemyAlive) {
+    public void playerOpponentStatus (int enemyAlive) {
         System.out.println("\n+===============+\n");
 
         //Display enemy/s health points
@@ -21,44 +26,51 @@ public class mainClass{
     }
 
     //Shows player move set and at the same chose them
-    public void playerMoveSet (thePlayer thisPlayer, player[] bandit, int enemyAlive) {
-        mainClass objSelect = new mainClass();
+    public void playerMoveSet (int enemyAlive) {
 
         System.out.print("\nPick move: \n 1. Slash\n 2. Death Blow\n 3. FireBall\n 4. Use HP Potion\n\nMove: ");
         int choice = s.nextInt();
         s.nextLine();
 
-        int target = objSelect.chooseTarget(bandit, enemyAlive);
+        int target = objSelect.chooseTarget(enemyAlive, choice);
 
         switch(choice) {
             case 1:
                 thisPlayer.slash(bandit[target - 1]);
+                if(bandit[target - 1].getHp() <= 0) {
+                    bandit[target - 1].setAlive(false);
+                }
                 break;
             case 2:
                 thisPlayer.deathBlow(bandit[target - 1]);
+                if(bandit[target - 1].getHp() <= 0) {
+                    bandit[target - 1].setAlive(false);
+                }
                 break;
             case 3:
                 thisPlayer.fireBall(bandit[target - 1]);
+                if(bandit[target - 1].getHp() <= 0) {
+                    bandit[target - 1].setAlive(false);
+                }
                 break;
             case 4:
                 thisPlayer.usePotion();
                 break;
             default:
                 System.out.println("Invalid choice. Try Again.");
-                objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
+                objSelect.playerMoveSet(enemyAlive);
                 break;
         }
-
-        if(bandit[target - 1].getHp() <= 0) {
-            bandit[target - 1].setAlive(false);
-        }
-
     }
 
     //Choosing target. Returns a number if the chosen target is alive, repeat if not.
-    public int chooseTarget (player[] bandit, int enemyAlive) {
-        boolean isValid = true;
+    public int chooseTarget (int enemyAlive, int choice1) {
+        boolean isValid = false;
         int choice = 0;
+
+        if(choice1 == 4) {
+            return 0;
+        }
 
         //Choosing target
         System.out.println("\n+===============+\n\nChoose target: \n");
@@ -66,7 +78,7 @@ public class mainClass{
             System.out.println((x + 1) + ". " + bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
         
-        while(isValid == false) {
+        while(!isValid) {
             //Input Target
             System.out.print("\nTarget: ");
             choice = s.nextInt();
@@ -74,16 +86,16 @@ public class mainClass{
 
             if(choice > enemyAlive || choice < 0) {
                 System.out.println("Target unidentified. Choose another.");
-                objSelect.chooseTarget(bandit, enemyAlive);
+                objSelect.chooseTarget(enemyAlive, 0);
             }
             
-            else if(bandit[choice - 1].isAlive() == false) {
+            else if(!bandit[choice - 1].isAlive()) {
                 System.out.println("Target is dead. Choose another.");
-                objSelect.chooseTarget(bandit, enemyAlive);
+                objSelect.chooseTarget(enemyAlive, 0);
             }
 
             else {
-                isValid = true;
+                break;
             }
         }
         
@@ -92,16 +104,20 @@ public class mainClass{
     }
 
     //Opponent attacks the player and the move will be used is random as long as the opponent is still alive. The opponent will attack accordingly to their names.
-    public void opponentsAttack (thePlayer thisPlayer, player [] bandit, int enemyAlive) {
+    public void opponentsAttack (int enemyAlive) {
         for(int x = 0; x < enemyAlive; x++) {
             if(bandit[x].isAlive()) {
                 bandit[x].slash(thisPlayer);
             }
         }
+
+        if(thisPlayer.getHp() <= 0) {
+            thisPlayer.setAlive(false);
+        }
     }
 
     //Checking the status of the character
-    public void checkStatus(thePlayer thisPlayer, player [] bandit, int enemyAlive) {
+    public void checkStatus(int enemyAlive) {
        
         if(thisPlayer.isBurned()) {
             thisPlayer.setHp(thisPlayer.getHp() - 1);
@@ -127,7 +143,7 @@ public class mainClass{
     public void gamePlay() {
         // call self object to access other functions
         thisPlayer = new thePlayer();
-        bandit = new player[5];
+        bandit = new player[100];
 
         //Input player's name
         System.out.print("Enter player's name: ");
@@ -153,27 +169,26 @@ public class mainClass{
 
                 while(isNotComplete && thisPlayer.isAlive()) {
                     
-                    objSelect.playerOpponentStatus(thisPlayer, bandit, enemyAlive);
+                    objSelect.playerOpponentStatus(enemyAlive);
                     
-                    objSelect.playerMoveSet(thisPlayer, bandit, enemyAlive);
+                    objSelect.playerMoveSet(enemyAlive);
 
-                    objSelect.opponentsAttack(thisPlayer, bandit, enemyAlive);
+                    objSelect.opponentsAttack(enemyAlive);
 
-                    objSelect.checkStatus(thisPlayer, bandit, enemyAlive);
+                    objSelect.checkStatus(enemyAlive);
 
                     //Check if the player is still alive
-                    if(thisPlayer.getHp() <= 0) {
+                    if(!thisPlayer.isAlive()) {
                         System.out.println(thisPlayer.getName() + " is defeated!\n\n+== GAME OVER ==+\n\n");
-                        thisPlayer.setAlive(false);
                         break;
                     } 
 
                     //Check all opponents if alive
-                    for(int x = 0; x < level; x++) {
+                    for(int x = 0; x < enemyAlive; x++) {
                         if(bandit[x].isAlive()) {
                             break;
                         }
-                        if(x + 1 == level) {
+                        if(x + 1 == enemyAlive) {
                             isNotComplete = !isNotComplete;
                         }
                     }
@@ -181,6 +196,10 @@ public class mainClass{
                     if(!isNotComplete) {
                         System.out.println("\n+== CONGRATULATIONS! YOU CLEARED LEVEL " + level + " STAGE " + stage + "! ==+\n");
                         Arrays.fill(bandit, null);
+
+                        if(level == 5) {
+                            level = 1;
+                        }
                     }
                 }
             }

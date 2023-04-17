@@ -11,6 +11,7 @@ public class mainClass{
     public thePlayer thisPlayer;
     public theBoss thisBoss; 
     public boolean isBossMode = false;
+    public int savedVictim = 0;
 
     //Global Variable
 
@@ -29,7 +30,7 @@ public class mainClass{
             }
         }
 
-        System.out.println("\n+===============+\n\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
+        System.out.println("\n+===============+\n\nSaved Victim: " + savedVictim + "\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
     }
 
     //Shows player move set and at the same chose them
@@ -73,34 +74,36 @@ public class mainClass{
         }
 
         else {
-            int target = objSelect.chooseTarget(enemyAlive, choice);
+            if(choice == 4) {
+                thisPlayer.usePotion();
+            }
+            else {
+                int target = objSelect.chooseTarget(enemyAlive, choice);
 
-            switch(choice) {
-                case 1:
-                    thisPlayer.slash(bandit[target - 1]);
-                    if(bandit[target - 1].getHp() <= 0) {
-                        bandit[target - 1].setAlive(false);
-                    }
+                switch(choice) {
+                    case 1:
+                        thisPlayer.slash(bandit[target - 1]);
+                        if(bandit[target - 1].getHp() <= 0) {
+                            bandit[target - 1].setAlive(false);
+                        }
                     break;
-                case 2:
-                    thisPlayer.deathBlow(bandit[target - 1]);
-                    if(bandit[target - 1].getHp() <= 0) {
-                        bandit[target - 1].setAlive(false);
-                    }
+                    case 2:
+                        thisPlayer.deathBlow(bandit[target - 1]);
+                        if(bandit[target - 1].getHp() <= 0) {
+                            bandit[target - 1].setAlive(false);
+                        }
                     break;
-                case 3:
-                    thisPlayer.fireBall(bandit[target - 1]);
-                    if(bandit[target - 1].getHp() <= 0) {
-                        bandit[target - 1].setAlive(false);
-                    }
+                    case 3:
+                        thisPlayer.fireBall(bandit[target - 1]);
+                        if(bandit[target - 1].getHp() <= 0) {
+                            bandit[target - 1].setAlive(false);
+                        }
                     break;
-                case 4:
-                    thisPlayer.usePotion();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try Again.");
-                    objSelect.playerMoveSet(enemyAlive);
-                    break;
+                    default:
+                        System.out.println("Invalid choice. Try Again.");
+                        objSelect.playerMoveSet(enemyAlive);
+                        break;
+                }
             }
         }
     }
@@ -181,6 +184,7 @@ public class mainClass{
                 }
             }
         }
+
         else {
             for(int x = 0; x < enemyAlive && !isBossMode; x++) {
                 if(bandit[x].isAlive()) {
@@ -206,7 +210,7 @@ public class mainClass{
             }
         }
 
-        if(thisBoss.isBurned()) {
+        if(isBossMode && thisBoss.isBurned()) {
             thisBoss.setHp(thisBoss.getHp() - 1);
             thisBoss.setCounter(thisBoss.getCounter() - 1);
 
@@ -282,6 +286,19 @@ public class mainClass{
                     //Check all opponents if alive
                     if(isBossMode && !thisBoss.isAlive()) {
                         isNotComplete = !isNotComplete;
+                        isBossMode = !isBossMode;
+
+                        System.out.println("Loki is defeated! You saved 1 victim!");
+                        savedVictim++;
+
+                        Random rand = new Random();
+                        double random = rand.nextDouble();
+                        boolean chance = (random <= 0.3) ? true : false;
+
+                        if(chance) {
+                            System.out.println("Looted 1 hp potion!\n");
+                            thisPlayer.setPotion(thisPlayer.getPotion() + 1);
+                        }
                     }
                     else {
                         for(int x = 0; x < enemyAlive && !isBossMode; x++) {

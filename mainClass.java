@@ -290,15 +290,6 @@ public class mainClass{
 
                         System.out.println("Loki is defeated! You saved 1 victim!");
                         savedVictim++;
-
-                        Random rand = new Random();
-                        double random = rand.nextDouble();
-                        boolean chance = (random <= 0.3) ? true : false;
-
-                        if(chance) {
-                            System.out.println("Looted 1 hp potion!\n");
-                            thisPlayer.setPotion(thisPlayer.getPotion() + 1);
-                        }
                     }
                     else {
                         for(int x = 0; x < enemyAlive && !isBossMode; x++) {

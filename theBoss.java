@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class theBoss extends player{
+public class theBoss extends thePlayer{
 
     public theBoss() {
         super.hp = 30;

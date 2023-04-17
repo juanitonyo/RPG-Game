@@ -3,6 +3,7 @@ import java.util.Random;;
 public class thePlayer extends player{
 
     public thePlayer() {
+        super.hp = 30;
     }
     
     public void deathBlow(player target) {

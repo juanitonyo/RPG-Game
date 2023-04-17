@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class mainClass{
@@ -9,6 +10,7 @@ public class mainClass{
     public player[] bandit;
     public thePlayer thisPlayer;
     public theBoss thisBoss; 
+    public boolean isBossMode = false;
 
     //Global Variable
 
@@ -18,8 +20,13 @@ public class mainClass{
         System.out.println("\n+===============+\n");
 
         //Display enemy/s health points
-        for(int x = 0; x < enemyAlive; x++) {
-            System.out.println((x + 1) + ". " +  bandit[x].getName() + "'s HP: " + bandit[x].getHp());
+        if(isBossMode) {
+            System.out.println(thisBoss.getName() + "'s HP: " + thisBoss.getHp());
+        }
+        else {
+            for(int x = 0; x < enemyAlive; x++) {
+                System.out.println((x + 1) + ". " +  bandit[x].getName() + "'s HP: " + bandit[x].getHp());
+            }
         }
 
         System.out.println("\n+===============+\n\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
@@ -32,34 +39,69 @@ public class mainClass{
         int choice = s.nextInt();
         s.nextLine();
 
-        int target = objSelect.chooseTarget(enemyAlive, choice);
+        if(isBossMode) {
+            switch(choice) {
+                case 1:
+                    thisPlayer.slash(thisBoss);
+                    if(thisBoss.getHp() <= 0) {
+                        thisBoss.setAlive(false);
+                    }
+                    break;
+                case 2:
+                    thisPlayer.deathBlow(thisBoss);
+                    if(thisBoss.getHp() <= 0) {
+                        thisBoss.setAlive(false);
+                    }
+                    break;
+                case 3:
+                    thisPlayer.fireBall(thisBoss);
+                    if(thisBoss.getHp() <= 0) {
+                        thisBoss.setAlive(false);
+                    }
+                    break;
+                case 4:
+                    thisPlayer.usePotion();
+                    if(thisBoss.getHp() <= 0) {
+                        thisBoss.setAlive(false);
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try Again.");
+                    objSelect.playerMoveSet(enemyAlive);
+                    break;
+            }
+        }
 
-        switch(choice) {
-            case 1:
-                thisPlayer.slash(bandit[target - 1]);
-                if(bandit[target - 1].getHp() <= 0) {
-                    bandit[target - 1].setAlive(false);
-                }
-                break;
-            case 2:
-                thisPlayer.deathBlow(bandit[target - 1]);
-                if(bandit[target - 1].getHp() <= 0) {
-                    bandit[target - 1].setAlive(false);
-                }
-                break;
-            case 3:
-                thisPlayer.fireBall(bandit[target - 1]);
-                if(bandit[target - 1].getHp() <= 0) {
-                    bandit[target - 1].setAlive(false);
-                }
-                break;
-            case 4:
-                thisPlayer.usePotion();
-                break;
-            default:
-                System.out.println("Invalid choice. Try Again.");
-                objSelect.playerMoveSet(enemyAlive);
-                break;
+        else {
+            int target = objSelect.chooseTarget(enemyAlive, choice);
+
+            switch(choice) {
+                case 1:
+                    thisPlayer.slash(bandit[target - 1]);
+                    if(bandit[target - 1].getHp() <= 0) {
+                        bandit[target - 1].setAlive(false);
+                    }
+                    break;
+                case 2:
+                    thisPlayer.deathBlow(bandit[target - 1]);
+                    if(bandit[target - 1].getHp() <= 0) {
+                        bandit[target - 1].setAlive(false);
+                    }
+                    break;
+                case 3:
+                    thisPlayer.fireBall(bandit[target - 1]);
+                    if(bandit[target - 1].getHp() <= 0) {
+                        bandit[target - 1].setAlive(false);
+                    }
+                    break;
+                case 4:
+                    thisPlayer.usePotion();
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try Again.");
+                    objSelect.playerMoveSet(enemyAlive);
+                    break;
+            }
         }
     }
 
@@ -105,9 +147,45 @@ public class mainClass{
 
     //Opponent attacks the player and the move will be used is random as long as the opponent is still alive. The opponent will attack accordingly to their names.
     public void opponentsAttack (int enemyAlive) {
-        for(int x = 0; x < enemyAlive; x++) {
-            if(bandit[x].isAlive()) {
-                bandit[x].slash(thisPlayer);
+        if(isBossMode) {
+            if(thisBoss.getHp() <= 15) {
+                Random rand = new Random();
+                double num = rand.nextDouble();
+                boolean atk = (num < 0.5) ? true : false;
+
+                if(atk) {
+                    double num1 = rand.nextDouble();
+                    boolean atk1 = (num1 < 0.5) ? true : false;
+
+                    if(atk1) {
+                        thisBoss.slash(thisPlayer);
+                    }
+                    else {
+                        thisBoss.fireBall(thisPlayer);
+                    }
+                }
+                else {
+                    thisBoss.usePotion();
+                }
+            }
+            else {
+                Random rand = new Random();
+                double num = rand.nextDouble();
+                boolean atk = (num < 0.5) ? true : false;
+
+                if(atk) {
+                    thisBoss.slash(thisPlayer);
+                }
+                else {
+                    thisBoss.fireBall(thisPlayer);
+                }
+            }
+        }
+        else {
+            for(int x = 0; x < enemyAlive && !isBossMode; x++) {
+                if(bandit[x].isAlive()) {
+                    bandit[x].slash(thisPlayer);
+                }
             }
         }
 
@@ -128,13 +206,24 @@ public class mainClass{
             }
         }
 
-        for(int x = 0; x < enemyAlive; x++) {
-            if(bandit[x].isBurned()) {
-                bandit[x].setHp(bandit[x].getHp() - 1);
-                bandit[x].setCounter(bandit[x].getCounter() - 1);
+        if(thisBoss.isBurned()) {
+            thisBoss.setHp(thisBoss.getHp() - 1);
+            thisBoss.setCounter(thisBoss.getCounter() - 1);
 
-                if(bandit[x].getCounter() == 0) {
-                    bandit[x].setBurned(false);
+            if(thisBoss.getCounter() == 0) {
+                thisBoss.setBurned(false);
+            }
+        }
+
+        else {
+            for(int x = 0; x < enemyAlive && !isBossMode; x++) {
+                if(bandit[x].isBurned()) {
+                    bandit[x].setHp(bandit[x].getHp() - 1);
+                    bandit[x].setCounter(bandit[x].getCounter() - 1);
+    
+                    if(bandit[x].getCounter() == 0) {
+                        bandit[x].setBurned(false);
+                    }
                 }
             }
         }
@@ -160,9 +249,16 @@ public class mainClass{
                 int enemyAlive = level;
 
                 //Generate opponents
-                for(int x = 0; x < level; x++) {
-                    bandit[x] = new player();
-                    bandit[x].setName("Bandit " + (x + 1));
+                if(level == 5) {
+                    isBossMode = !isBossMode;
+                    thisBoss = new theBoss();
+                    thisBoss.setName("Loki");
+                }
+                else {
+                    for(int x = 0; x < level; x++) {
+                        bandit[x] = new player();
+                        bandit[x].setName("Bandit " + (x + 1));
+                    }
                 }
 
                 System.out.println("\n+== Level " + level + " Stage  " + stage + " ==+\n");
@@ -184,12 +280,17 @@ public class mainClass{
                     } 
 
                     //Check all opponents if alive
-                    for(int x = 0; x < enemyAlive; x++) {
-                        if(bandit[x].isAlive()) {
-                            break;
-                        }
-                        if(x + 1 == enemyAlive) {
-                            isNotComplete = !isNotComplete;
+                    if(isBossMode && !thisBoss.isAlive()) {
+                        isNotComplete = !isNotComplete;
+                    }
+                    else {
+                        for(int x = 0; x < enemyAlive && !isBossMode; x++) {
+                            if(bandit[x].isAlive()) {
+                                break;
+                            }
+                            if(x + 1 == enemyAlive) {
+                                isNotComplete = !isNotComplete;
+                            }
                         }
                     }
 
@@ -233,13 +334,11 @@ public class mainClass{
                     System.out.println("Invalid input");
                     break;
             }
-
             
         }
         
         s.close();
         System.exit(0);
     }
-
     
 }

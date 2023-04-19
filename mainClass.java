@@ -30,7 +30,9 @@ public class mainClass{
             }
         }
 
-        System.out.println("\n+===============+\n\nSaved Victim: " + savedVictim + "\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n\n+===============+");
+        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
+        System.out.println("\nSaved Victim: " + savedVictim + "\n" + thisPlayer.getName() + "'s HP: " + thisPlayer.getHp() + "\n");
+        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
     }
 
     //Shows player move set and at the same chose them
@@ -67,6 +69,7 @@ public class mainClass{
                     }
                     break;
                 default:
+                    System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                     System.out.println("Invalid choice. Try Again.");
                     objSelect.playerMoveSet(enemyAlive);
                     break;
@@ -100,6 +103,7 @@ public class mainClass{
                         }
                     break;
                     default:
+                        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                         System.out.println("Invalid choice. Try Again.");
                         objSelect.playerMoveSet(enemyAlive);
                         break;
@@ -118,7 +122,8 @@ public class mainClass{
         }
 
         //Choosing target
-        System.out.println("\n+===============+\n\nChoose target: \n");
+        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
+        System.out.println("\nChoose target: \n");
         for(int x = 0; x < enemyAlive; x++) {
             System.out.println((x + 1) + ". " + bandit[x].getName() + "'s HP: " + bandit[x].getHp());
         }
@@ -130,11 +135,13 @@ public class mainClass{
             s.nextLine();        
 
             if(choice > enemyAlive || choice < 0) {
+                System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                 System.out.println("Target unidentified. Choose another.");
                 objSelect.chooseTarget(enemyAlive, 0);
             }
             
             else if(!bandit[choice - 1].isAlive()) {
+                System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                 System.out.println("Target is dead. Choose another.");
                 objSelect.chooseTarget(enemyAlive, 0);
             }
@@ -239,6 +246,7 @@ public class mainClass{
         bandit = new player[100];
 
         //Input player's name
+        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
         System.out.print("Enter player's name: ");
         String myName =  s.nextLine();
 
@@ -265,6 +273,7 @@ public class mainClass{
                     }
                 }
 
+                System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                 System.out.println("\n+== Level " + level + " Stage  " + stage + " ==+\n");
 
                 while(isNotComplete && thisPlayer.isAlive()) {
@@ -279,6 +288,7 @@ public class mainClass{
 
                     //Check if the player is still alive
                     if(!thisPlayer.isAlive()) {
+                        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                         System.out.println(thisPlayer.getName() + " is defeated!\n\n+== GAME OVER ==+\n\n");
                         break;
                     } 
@@ -288,6 +298,7 @@ public class mainClass{
                         isNotComplete = !isNotComplete;
                         isBossMode = !isBossMode;
 
+                        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                         System.out.println("Loki is defeated! You saved 1 victim!");
                         savedVictim++;
                     }
@@ -303,7 +314,8 @@ public class mainClass{
                     }
 
                     if(!isNotComplete) {
-                        System.out.println("\n+== CONGRATULATIONS! YOU CLEARED LEVEL " + level + " STAGE " + stage + "! ==+\n");
+                        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X\n");
+                        System.out.println("\nCONGRATULATIONS! YOU CLEARED LEVEL " + level + " STAGE " + stage + "! ==+\n");
                         Arrays.fill(bandit, null);
 
                         if(level == 5) {
@@ -325,14 +337,14 @@ public class mainClass{
 
         while(isPlayable){
 
-            System.out.print("+== MAIN MENU ==+\n 1. Play\n 2. Exit\n+===============+\n\nSelect Option: ");
-            
-            int choice = s.nextInt();
+            System.out.print("+ — ======================== — +\n|++++++++++++ MENU ++++++++++++|\n+ — ======================== — +\n|                              |\n|           1. PLAY            |\n|           2. EXIT            |\n|                              |\n+ — ======================== — +\n|++++++++++++++++++++++++++++++|\n+ — ======================== — +\n    X~~~~~~~~~~~~~~~~~~~~~~X\n          Choice: ");
+                                     
+            int choice = s.nextInt();                                                                                                                                                                                                                                                                                                                                                 
             s.nextLine();
 
             switch(choice){
                 case 1: 
-                    System.out.println("\n+===============+\n");
+                    System.out.println("\nX~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                     objSelect.gamePlay();
                     break;
                 case 2:

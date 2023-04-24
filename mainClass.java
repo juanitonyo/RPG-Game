@@ -7,11 +7,14 @@ public class mainClass{
     // Global objects
     public static Scanner s = new Scanner(System.in);
     public static mainClass objSelect = new mainClass();
+    public static int scoreCounter = 0;
     public player[] bandit;
     public thePlayer thisPlayer;
     public theBoss thisBoss; 
     public boolean isBossMode = false;
     public int savedVictim = 0;
+    public int score = 0;
+    public static String[][] scores = new String[10][2];
 
     //Global Variable
 
@@ -246,8 +249,8 @@ public class mainClass{
         bandit = new player[100];
 
         //Input player's name
-        System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
-        System.out.print("Enter player's name: ");
+        System.out.println("\t\tX~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
+        System.out.print(" Enter player's name: ");
         String myName =  s.nextLine();
 
         thisPlayer.setName(myName);
@@ -290,6 +293,9 @@ public class mainClass{
                     if(!thisPlayer.isAlive()) {
                         System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                         System.out.println(thisPlayer.getName() + " is defeated!\n\n+== GAME OVER ==+\n\n");
+                        scores[scoreCounter][0] = String.valueOf(score);
+                        scores[scoreCounter][1] = thisPlayer.getName();
+                        score = 0;
                         break;
                     } 
 
@@ -300,7 +306,9 @@ public class mainClass{
 
                         System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
                         System.out.println("Loki is defeated! You saved 1 victim!");
+                        score += 11;
                         savedVictim++;
+                        score += 6;
                     }
                     else {
                         for(int x = 0; x < enemyAlive && !isBossMode; x++) {
@@ -308,6 +316,7 @@ public class mainClass{
                                 break;
                             }
                             if(x + 1 == enemyAlive) {
+                                score += enemyAlive * 9;
                                 isNotComplete = !isNotComplete;
                             }
                         }
@@ -316,6 +325,7 @@ public class mainClass{
                     if(!isNotComplete) {
                         System.out.println("X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X\n");
                         System.out.println("\nCONGRATULATIONS! YOU CLEARED LEVEL " + level + " STAGE " + stage + "! ==+\n");
+                        score += 4;
                         Arrays.fill(bandit, null);
 
                         if(level == 5) {
@@ -326,39 +336,62 @@ public class mainClass{
             }
 
             stage++;
+            score += 4;
 
         }while(thisPlayer.isAlive());
 
     }
+
+    public void highscore() {
+        for(int i = 0; i < scores.length; i++) {
+            System.out.println((i + 1) + ".\t" + scores[i][0] + "\t" + scores[i][1]);
+        }
+    }
     
     public static void main(String[] args) {
-        
-        boolean isPlayable = true;
+        System.out.println("\t\t  ╔════╦╗─────╔╗╔═╗──────╔╗─╔╗");
+        System.out.println("\t\t  ║╔╗╔╗║║─────║║║╔╝──────║║╔╝╚╗   ");
+        System.out.println("\t\t  ╚╝║║╚╣╚═╦══╗║╚╝╝╔═╗╔╦══╣╚╩╗╔╝   ");
+        System.out.println("\t\t  ──║║─║╔╗║║═╣║╔╗║║╔╗╬╣╔╗║╔╗║║");
+        System.out.println("\t\t  ──║║─║║║║║═╣║║║╚╣║║║║╚╝║║║║╚╗");
+        System.out.println("\t\t  ──╚╝─╚╝╚╩══╝╚╝╚═╩╝╚╩╩═╗╠╝╚╩═╝");
+        System.out.println("\t\t  ────────────────────╔═╝║────");
+        System.out.println("\t\t  ────────────────────╚══╝────");
 
-        while(isPlayable){
+        while(true){
+            if(true) {
+                boolean isPlayable = true;
 
-            System.out.print("+ — ======================== — +\n|++++++++++++ MENU ++++++++++++|\n+ — ======================== — +\n|                              |\n|           1. PLAY            |\n|           2. EXIT            |\n|                              |\n+ — ======================== — +\n|++++++++++++++++++++++++++++++|\n+ — ======================== — +\n    X~~~~~~~~~~~~~~~~~~~~~~X\n          Choice: ");
-                                     
-            int choice = s.nextInt();                                                                                                                                                                                                                                                                                                                                                 
-            s.nextLine();
+                while(isPlayable){
 
-            switch(choice){
-                case 1: 
-                    System.out.println("\nX~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
-                    objSelect.gamePlay();
-                    break;
-                case 2:
-                    isPlayable = false;
-                    break;
-                default:
-                    System.out.println("Invalid input");
-                    break;
+                    System.out.print("\t\t+ — ======================== — +\n\t\t|++++++++++++ MENU ++++++++++++|\n\t\t+ — ======================== — +\n\t\t|                              |\n\t\t|           1. PLAY            |\n\t\t|           2. HIGH SCORE      |\n\t\t|           3. EXIT            |\n\t\t|                              |\n\t\t+ — ======================== — +\n\t\t|++++++++++++++++++++++++++++++|\n\t\t+ — ======================== — +\n\t\t    X~~~~~~~~~~~~~~~~~~~~~~X\n\t\t          Choice: ");
+                                            
+                    int choice = s.nextInt();                                                                                                                                                                                                                                                                                                                                                 
+                    s.nextLine();
+
+                    switch(choice){
+                        case 1: 
+                            System.out.println("\n\t\tX~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~X");
+                            ++scoreCounter;
+                            objSelect.gamePlay();
+                            break;
+                        case 2:
+                            objSelect.highscore();
+                            break;
+                        case 3:
+                            isPlayable = false;
+                            break;
+                        default:
+                            System.out.println("Invalid input");
+                            break;
+                    }
+                    
+                }
+                
+                s.close();
+                System.exit(0);
             }
-            
         }
-        
-        s.close();
-        System.exit(0);
     }
     
 }
